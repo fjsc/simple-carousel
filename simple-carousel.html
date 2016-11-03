@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="carousel-slide.html">
+<link rel="import" href="animation-behavior.html">
 
 <!--
 `simple-carousel`
@@ -82,7 +83,7 @@ Simple carousel component for Polymer 1.0
     Polymer({
 
       is: 'simple-carousel',
-
+      behaviors: [AnimationBehavior],
       properties: {
          /**
          * Set the selected item.
