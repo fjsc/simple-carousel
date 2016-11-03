@@ -1,4 +1,5 @@
 # \<simple-carousel\>
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://beta.webcomponents.org/element/owner/my-element)
 
 `<simple-carousel>` is a simple configurable carousel component for Polymer 1.0. It provides a simple way to insert HTML content in slides and multiple options to configure their functionality and transitions.
 
@@ -41,3 +42,7 @@ $ bower install --save polymer-simple-carousel
 ```html
 <link rel="import" href="simple-carousel.html">
 ```
+
+## License
+
+Apache License 2.0
