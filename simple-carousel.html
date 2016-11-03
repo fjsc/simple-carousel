@@ -11,6 +11,7 @@ Simple carousel component for Polymer 1.0
 <dom-module id="simple-carousel">
   <template>
     <style>
+
       :host {
         display: block;
         position:relative;
@@ -126,9 +127,6 @@ Simple carousel component for Polymer 1.0
           value: true
         }
       },
-      created: function(){
-    
-      },
       ready: function(){
         this._autoStart();
       },
@@ -147,7 +145,7 @@ Simple carousel component for Polymer 1.0
         this.selected = this.queryEffectiveChildren('carousel-slide');
         //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
       },
-      _selectedChanged(selected, oldSelected) {
+      _selectedChanged: function(selected, oldSelected) {
           if (oldSelected) oldSelected.removeAttribute('selected');
           if (selected) selected.setAttribute('selected', '');
 

@@ -1,6 +1,6 @@
 # \<simple-carousel\>
 
-`<paper-dialog>` is a simple configurable carousel component for Polymer 1.0. It provides a simple way to insert HTML content in slides and multiple options to configure their functionality.
+`<simple-carousel>` is a simple configurable carousel component for Polymer 1.0. It provides a simple way to insert HTML content in slides and multiple options to configure their functionality and transitions.
 
 For example, the following code implements the most simple configuration for the carousel:
 
@@ -21,7 +21,7 @@ For example, the following code implements the most simple configuration for the
 ## Demo
 
 
-> [Demo 1](http://)
+> [Demo 1](https://franjsc.github.io/simple-carousel/components/simple-carousel/)
 
 <img src="http://www.bugui.org/Images/carousel.png" width="340"/>
 
