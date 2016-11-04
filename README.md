@@ -43,6 +43,11 @@ $ bower install --save polymer-simple-carousel
 <link rel="import" href="simple-carousel.html">
 ```
 
+## API Reference
+
+> [API Reference](https://franjsc.github.io/simple-carousel/components/simple-carousel/)
+
+
 ## License
 
 Apache License 2.0
