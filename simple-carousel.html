@@ -123,13 +123,25 @@ Simple carousel component for Polymer 1.0
         /**
          * If this property is true, the carousel shows the navigation buttons.
          */
-        showNavigationButtons: {
-          type: Boolean,
+        showControls: {
+          type: String,
           value: true
+        },
+
+        /**
+         * Transition animation style [linear | cubic | cubic-inverse | ease | ease-in | ease-out | ease-in-out | ...]
+         */
+        transitionStyle: {
+          type: String,
+          value: "ease"
         }
       },
       ready: function(){
         this._autoStart();
+        if(this.showControls == 'false'){
+          this.$.prevBtn.style.display = 'none';
+          this.$.nextBtn.style.display = 'none';
+        }
       },
       _autoStart: function(){
         if(this.auto){
@@ -139,10 +151,6 @@ Simple carousel component for Polymer 1.0
         }
       },
       attached: function() {
-        if(!this.showNavigationButtons){
-          this.$.prevBtn.style.display = 'none';
-          this.$.nextBtn.style.display = 'none';
-        }
         this.selected = this.queryEffectiveChildren('carousel-slide');
         //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
       },
@@ -161,55 +169,40 @@ Simple carousel component for Polymer 1.0
        */
       previous: function(){
         var elem = this.selected.previousElementSibling;
-
         this._autoStart();
         if(this.infiniteLoop && !elem){
           var elems = this.queryAllEffectiveChildren('carousel-slide');
           elem = elems[elems.length - 1];
         }
 
-        if (elem) {
-          // Setup transition start state
-          var oldSelected = this.selected;
-          this._translateX(oldSelected, 0);
-          this._translateX(elem, -this.offsetWidth);
-
-          // Start the transition
-          this.selected = elem;
-          this._translateX(oldSelected, this.offsetWidth, true /* transition */);
-          this._translateX(elem, 0, true /* transition */);
-        }
+        elem && this._translateAnimation(elem,-1);
+        
       },
       /**
        * Shows the next carousel element.
        */
       next:function(){
-          var elem = this.selected.nextElementSibling;
-          this._autoStart();
-          if(this.infiniteLoop && !elem){
-            elem = this.queryEffectiveChildren('carousel-slide');
-          }
+        var elem = this.selected.nextElementSibling;
+        this._autoStart();
+        if(this.infiniteLoop && !elem){
+          elem = this.queryEffectiveChildren('carousel-slide');
+        }
 
-          if (elem) {
-            // Setup transition start state
-            var oldSelected = this.selected;
-            this._translateX(oldSelected, 0);
-            this._translateX(elem, this.offsetWidth);
-
-            // Start the transition
-            this.selected = elem;
-            this._translateX(oldSelected, -this.offsetWidth, true /* transition */);
-            this._translateX(elem, 0, true /* transition */);
-          }
+        elem && this._translateAnimation(elem,1);    
       },
-      _translateX: function(elem, x, transition) {
-
-        var transitionDuration = this.transitionDuration / 1000;
-        elem.style.display = 'inline-block';
-        elem.style.transition = transition ? 'transform ' + transitionDuration +'s' : '';
-        elem.style.transform = 'translate3d(' + x + 'px, 0, 0)';
+      /**
+       * Stop carousel loop
+       */
+      stop: function(){
+        clearInterval(this.intervalHander);
+      },
+      /**
+       * Start carousel loop
+       */
+      start: function(){
+        this.infiniteLoop = true;
+        this._autoStart();
       }
-
     });
   </script>
 </dom-module>
