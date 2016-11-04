@@ -6,7 +6,8 @@
 `simple-carousel`
 Simple carousel component for Polymer 1.0
 
-@demo demo/index.html 
+[View in Github](https://github.com/franjsc/simple-carousel)
+@demo demo/index.html
 -->
 
 <dom-module id="simple-carousel">
@@ -176,7 +177,7 @@ Simple carousel component for Polymer 1.0
         }
 
         elem && this._translateAnimation(elem,-1);
-        
+
       },
       /**
        * Shows the next carousel element.
@@ -188,7 +189,7 @@ Simple carousel component for Polymer 1.0
           elem = this.queryEffectiveChildren('carousel-slide');
         }
 
-        elem && this._translateAnimation(elem,1);    
+        elem && this._translateAnimation(elem,1);
       },
       /**
        * Stop carousel loop
