@@ -1,0 +1,209 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="carousel-slide.html">
+<link rel="import" href="animation-behavior.html">
+
+<!--
+`simple-carousel`
+Simple carousel component for Polymer 1.0
+
+[View in Github](https://github.com/franjsc/simple-carousel)
+@demo demo/index.html
+-->
+
+<dom-module id="simple-carousel">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        position:relative;
+        overflow:hidden;
+      }
+
+      :host ::content carousel-slide{
+        position:absolute;
+        width:100%;
+        left:0;
+        top:0;
+      }
+
+      :host ::content carousel-slide:first-child{
+          position:relative;
+      }
+
+      :host ::content carousel-slide:not([selected]) {
+        display:none;
+      }
+
+      button {
+        position: absolute;
+        top: calc(50% - 20px);
+        padding: 0;
+        line-height: 40px;
+        border: none;
+        background: none;
+        color: #DDD;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+
+      button:hover,
+      button:focus {
+        opacity: 1;
+      }
+
+      #prevBtn {
+        left: 12px;
+      }
+
+      #nextBtn {
+        right: 12px;
+      }
+
+      button[disabled] {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+
+    </style>
+
+    <div>
+      <content select="carousel-slide"></content>
+    </div>
+
+    <button id="prevBtn" on-click="previous">❮</button>
+    <button id="nextBtn" on-click="next">❯</button>
+
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'simple-carousel',
+      behaviors: [AnimationBehavior],
+      properties: {
+         /**
+         * Set the selected item.
+         */
+        selected: {
+          type: Object,
+          observer: '_selectedChanged'
+        },
+        /**
+         * If this property is true, the carousel displays items in a continuous loop.
+         */
+        infiniteLoop: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * If this property us true, the carousel autoplay the loop.
+         */
+        auto: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * Set the time between transitions (milliseconds)
+         */
+        transitionTime: {
+          type: Number,
+          value:3000
+        },
+        /**
+         * Set the transition animation duration (milliseconds)
+         */
+        transitionDuration: {
+          type: Number,
+          value: 500
+        },
+        /**
+         * If this property is true, the carousel shows the navigation buttons.
+         */
+        showControls: {
+          type: String,
+          value: true
+        },
+
+        /**
+         * Transition animation style [linear | cubic | cubic-inverse | ease | ease-in | ease-out | ease-in-out | ...]
+         */
+        transitionStyle: {
+          type: String,
+          value: "ease"
+        }
+      },
+      ready: function(){
+        this._autoStart();
+        if(this.showControls == 'false'){
+          this.$.prevBtn.style.display = 'none';
+          this.$.nextBtn.style.display = 'none';
+        }
+      },
+      _autoStart: function(){
+        if(this.auto){
+          var that =  this;
+          this.intervalHander && clearInterval(this.intervalHander);
+          this.intervalHander = setInterval(function(){that.next()}, this.transitionTime);
+        }
+      },
+      attached: function() {
+        this.selected = this.queryEffectiveChildren('carousel-slide');
+        //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
+      },
+      _selectedChanged: function(selected, oldSelected) {
+          if (oldSelected) oldSelected.removeAttribute('selected');
+          if (selected) selected.setAttribute('selected', '');
+
+          if(!this.infiniteLoop) {
+             this.$.prevBtn.disabled = !selected.previousElementSibling;
+             this.$.nextBtn.disabled = !selected.nextElementSibling;
+          }
+
+      },
+      /**
+       * Shows the previous carousel element.
+       */
+      previous: function(){
+        var elem = this.selected.previousElementSibling;
+        this._autoStart();
+        if(this.infiniteLoop && !elem){
+          var elems = this.queryAllEffectiveChildren('carousel-slide');
+          elem = elems[elems.length - 1];
+        }
+
+        elem && this._translateAnimation(elem,-1);
+
+      },
+      /**
+       * Shows the next carousel element.
+       */
+      next:function(){
+        var elem = this.selected.nextElementSibling;
+        this._autoStart();
+        if(this.infiniteLoop && !elem){
+          elem = this.queryEffectiveChildren('carousel-slide');
+        }
+
+        elem && this._translateAnimation(elem,1);
+      },
+      /**
+       * Stop carousel loop
+       */
+      stop: function(){
+        clearInterval(this.intervalHander);
+      },
+      /**
+       * Start carousel loop
+       */
+      start: function(){
+        this.infiniteLoop = true;
+        this._autoStart();
+      }
+    });
+  </script>
+</dom-module>

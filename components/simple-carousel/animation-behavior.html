@@ -1,0 +1,42 @@
+<script>
+    AnimationBehavior = {
+
+
+      properties:{
+         /**
+         * Set the selected item.
+         */
+        _transitionStyle: {
+          type: String,
+          computed: '_computeTransitionStyle(transitionStyle)'
+        }
+      },
+      _computeTransitionStyle: function(transitionStyle){
+        switch(transitionStyle){
+          case 'cubic':
+            return 'cubic-bezier(.1,.6,.1,1)'
+          case 'cubic-inverse':
+            return 'cubic-bezier(0, 0.2, 0.9, 0.4)'
+          default:
+            return transitionStyle;
+        }
+      },
+      _translateAnimation: function(elem, inverse){
+         // Setup transition start state
+          var oldSelected = this.selected;
+          this._translateX(oldSelected, 0);
+          this._translateX(elem, this.offsetWidth*inverse);
+
+          // Start the transition
+          this.selected = elem;
+          this._translateX(oldSelected, -this.offsetWidth*inverse, true /* transition */);
+          this._translateX(elem, 0, true /* transition */);
+      },
+      _translateX: function(elem, x, transition) {
+        var transitionDuration = this.transitionDuration / 1000;
+        elem.style.display = 'inline-block';
+        elem.style.transition = transition ? 'transform ' + transitionDuration +'s ' + this._transitionStyle : '';
+        elem.style.transform = 'translate3d(' + x + 'px, 0, 0)';
+      }
+    };
+</script>

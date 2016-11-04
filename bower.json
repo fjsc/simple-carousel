@@ -1,0 +1,29 @@
+{
+  "name": "simple-carousel",
+  "version": "1.1.0",
+  "description": "Simple carousel component for Polymer 1.0",
+  "authors": [
+    "franjsc"
+  ],
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "carousel"
+  ],
+  "main": "simple-carousel.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/franjsc/simple-carousel"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

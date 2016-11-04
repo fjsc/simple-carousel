@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <title>simple-carousel demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../simple-carousel.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+
+    </style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic simple-carousel Demo (ease/default animation)</h3>
+      <demo-snippet>
+        <style>
+        carousel-slide h3{
+          background: #3498db;
+          color: #fff;
+          font-size: 36px;
+          line-height: 100px;
+          margin: 1px;
+          padding: 2%;
+          position: relative;
+          text-align: center;
+        }
+        </style>
+        <template>
+          <simple-carousel>
+            <carousel-slide>
+              <h3>1</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>2</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>3</h3>
+            </carousel-slide>         
+          </simple-carousel>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered (linear animation)">
+      <h3>Infinite simple-carousel Demo (linear animation)</h3>
+      <demo-snippet>
+        <template>
+          <simple-carousel transition-style="linear" infinite-loop="true" auto="true" transition-time="5000" transition-duration="500">
+            <carousel-slide>
+              <h3>1</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>2</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>3</h3>
+            </carousel-slide>         
+          </simple-carousel>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <h3>Infinite simple-carousel Demo without controls (cubic animation)</h3>
+      <demo-snippet>
+        <template>
+          <simple-carousel transition-style="cubic" infinite-loop="true" auto="true" transition-duration="1000" show-controls="false">
+            <carousel-slide>
+              <h3>1</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>2</h3>
+            </carousel-slide>
+            <carousel-slide>
+              <h3>3</h3>
+            </carousel-slide>         
+          </simple-carousel>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>
