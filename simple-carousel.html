@@ -20,18 +20,21 @@ Simple carousel component for Polymer 1.0
         overflow:hidden;
       }
 
-      :host ::content carousel-slide{
+      :host ::content carousel-slide,
+      :host ::content [carousel-slide] {
         position:absolute;
         width:100%;
         left:0;
         top:0;
       }
 
-      :host ::content carousel-slide:first-child{
+      :host ::content carousel-slide:first-child,
+      :host ::content [carousel-slide]:first-child {
           position:relative;
       }
 
-      :host ::content carousel-slide:not([selected]) {
+      :host ::content carousel-slide:not([selected]),
+      :host ::content [carousel-slide]:not([selected]) {
         display:none;
       }
 
@@ -71,7 +74,7 @@ Simple carousel component for Polymer 1.0
     </style>
 
     <div>
-      <content select="carousel-slide"></content>
+      <content select="carousel-slide, [carousel-slide]"></content>
     </div>
 
     <button id="prevBtn" on-click="previous">❮</button>
@@ -152,7 +155,7 @@ Simple carousel component for Polymer 1.0
         }
       },
       attached: function() {
-        this.selected = this.queryEffectiveChildren('carousel-slide');
+        this.selected = this.queryEffectiveChildren('carousel-slide, [carousel-slide]');
         //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
       },
       _selectedChanged: function(selected, oldSelected) {
@@ -172,7 +175,7 @@ Simple carousel component for Polymer 1.0
         var elem = this.selected.previousElementSibling;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          var elems = this.queryAllEffectiveChildren('carousel-slide');
+          var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide]');
           elem = elems[elems.length - 1];
         }
 
@@ -186,7 +189,7 @@ Simple carousel component for Polymer 1.0
         var elem = this.selected.nextElementSibling;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          elem = this.queryEffectiveChildren('carousel-slide');
+          elem = this.queryEffectiveChildren('carousel-slide, [carousel-slide]');
         }
 
         elem && this._translateAnimation(elem,1);
