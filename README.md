@@ -19,7 +19,7 @@ For example, the following code implements the most simple configuration for the
 </simple-carousel>
 ```
 
-It can also be configured with attributes:
+You can also use attributes (with or without the `data-` prefix):
 
 ```html
 <simple-carousel>
@@ -29,7 +29,7 @@ It can also be configured with attributes:
   <div carousel-slide>
     <h3>2</h3>
   </div>
-  <div carousel-slide>
+  <div data-carousel-slide>
     <h3>3</h3>
   </div>         
 </simple-carousel>
