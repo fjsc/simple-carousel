@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../../src/shared-styles/shared-styles.html" />
 <link rel="import" href="carousel-slide.html">
 <link rel="import" href="animation-behavior.html">
 
@@ -12,7 +13,7 @@ Simple carousel component for Polymer 1.0
 
 <dom-module id="simple-carousel">
   <template>
-    <style>
+    <style include="shared-styles">
 
       :host {
         display: block;
@@ -20,18 +21,24 @@ Simple carousel component for Polymer 1.0
         overflow:hidden;
       }
 
-      :host ::content carousel-slide{
+      :host ::content carousel-slide,
+      :host ::content [carousel-slide],
+      :host ::content [data-carousel-slide] {
         position:absolute;
         width:100%;
         left:0;
         top:0;
       }
 
-      :host ::content carousel-slide:first-child{
+      :host ::content carousel-slide:first-child,
+      :host ::content [carousel-slide]:first-child,
+      :host ::content [data-carousel-slide]:first-child {
           position:relative;
       }
 
-      :host ::content carousel-slide:not([selected]) {
+      :host ::content carousel-slide:not([selected]),
+      :host ::content [carousel-slide]:not([selected]),
+      :host ::content [data-carousel-slide]:not([selected]) {
         display:none;
       }
 
@@ -47,6 +54,10 @@ Simple carousel component for Polymer 1.0
         font-weight: bold;
         cursor: pointer;
         opacity: 0.7;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
 
       button:hover,
@@ -67,15 +78,17 @@ Simple carousel component for Polymer 1.0
         cursor: default;
       }
 
-
+      :host(.non-keyboard) :focus {
+        outline: none !important;
+      }
     </style>
 
     <div>
-      <content select="carousel-slide"></content>
+      <content select="carousel-slide, [carousel-slide], [data-carousel-slide]"></content>
     </div>
 
-    <button id="prevBtn" on-click="previous">❮</button>
-    <button id="nextBtn" on-click="next">❯</button>
+    <button id="prevBtn" on-click="previous" on-keyup="keyboardAdvancePrevious" tabindex="0">❮</button>
+    <button id="nextBtn" on-click="next" on-keyup="keyboardAdvanceNext" tabindex="0">❯</button>
 
 
   </template>
@@ -152,7 +165,7 @@ Simple carousel component for Polymer 1.0
         }
       },
       attached: function() {
-        this.selected = this.queryEffectiveChildren('carousel-slide');
+        this.selected = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
         //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
       },
       _selectedChanged: function(selected, oldSelected) {
@@ -165,14 +178,38 @@ Simple carousel component for Polymer 1.0
           }
 
       },
+      keyboardAdvancePrevious: function ( event ) {
+        if ( ( event.which === 32 ) || ( event.which === 13 ) ) {
+          this.previous( event );
+        }
+      },
+      keyboardAdvanceNext: function ( event ) {
+        if ( ( event.which === 32 ) || ( event.which === 13 ) ) {          
+          this.next( event );
+        }
+      },
+
       /**
        * Shows the previous carousel element.
        */
-      previous: function(){
+      previous: function( event ){
+        var host = Polymer.dom( this );
+        console.log( 'host', host );
+
+        if (
+          ( event.type === 'keyup' )
+          || ( event.type === 'keydown' )
+          || ( event.type === 'keypress' )
+        ) {
+          host.classList.remove( 'non-keyboard' );
+        } else {
+          host.classList.add( 'non-keyboard' );
+        }
+
         var elem = this.selected.previousElementSibling;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          var elems = this.queryAllEffectiveChildren('carousel-slide');
+          var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
           elem = elems[elems.length - 1];
         }
 
@@ -182,11 +219,24 @@ Simple carousel component for Polymer 1.0
       /**
        * Shows the next carousel element.
        */
-      next:function(){
+      next:function( event ){
+        var host = Polymer.dom( this );
+        console.log( 'host', host );
+
+        if (
+          ( event.type === 'keyup' )
+          || ( event.type === 'keydown' )
+          || ( event.type === 'keypress' )
+        ) {
+          host.classList.remove( 'non-keyboard' );
+        } else {
+          host.classList.add( 'non-keyboard' );
+        }
+
         var elem = this.selected.nextElementSibling;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          elem = this.queryEffectiveChildren('carousel-slide');
+          elem = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
         }
 
         elem && this._translateAnimation(elem,1);
