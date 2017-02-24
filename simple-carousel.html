@@ -180,7 +180,7 @@ Simple carousel component for Polymer 1.0
       /**
        * Sets keyboard class based on event type
        */
-      _setKeyboardClass: function() {
+      _setKeyboardClass: function(event) {
         var host = Polymer.dom(this);
         if (event.type === 'keyup' || event.type === 'keydown' || event.type === 'keypress') {
           host.classList.remove('non-keyboard');
@@ -203,14 +203,19 @@ Simple carousel component for Polymer 1.0
        * Shows the previous carousel element.
        */
       previous: function(event) {
-        this._setKeyboardClass();
+        this._setKeyboardClass(event);
         var prevElem = this.selected.previousElementSibling;
-        var isSlideElem = prevElem && prevElem.tagName === 'CAROUSEL-SLIDE';
+        var isSlideElem = prevElem && prevElem.tagName === 'CAROUSEL-SLIDE' && !prevElem.hidden;
         var elem = isSlideElem ? this.selected.previousElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
           var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
-          elem = elems[elems.length - 1];
+          var n = 1;
+          elem = elems[elems.length - n];
+          while (elem.hidden) {
+            n++;
+            elem = elems[elems.length - n];
+          }
         }
 
         elem && this._translateAnimation(elem,-1);
@@ -220,9 +225,9 @@ Simple carousel component for Polymer 1.0
        * Shows the next carousel element.
        */
       next:function(event) {
-        this._setKeyboardClass();
+        this._setKeyboardClass(event);
         var nextElem = this.selected.nextElementSibling;
-        var isSlideElem = nextElem && nextElem.tagName === 'CAROUSEL-SLIDE';
+        var isSlideElem = nextElem && nextElem.tagName === 'CAROUSEL-SLIDE' && !nextElem.hidden;
         var elem = isSlideElem ? this.selected.nextElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
