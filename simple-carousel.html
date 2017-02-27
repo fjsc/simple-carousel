@@ -163,8 +163,28 @@ Simple carousel component for Polymer 1.0
           this.intervalHander = setInterval(function(){that.next()}, this.transitionTime);
         }
       },
+      _getNextVisibleSlide() {
+        var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+        var selected;
+        elems.forEach(function(elem) {
+          if (!elem.hidden && !selected) {
+            selected = elem;
+          }
+        });
+        return selected;
+      },
+      _getPreviousVisibleSlide() {
+        var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+        var n = 1;
+        elem = elems[elems.length - n];
+        while (elem.hidden) {
+          n++;
+          elem = elems[elems.length - n];
+        }
+        return elem;
+      },
       attached: function() {
-        this.selected = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+        this.selected = this._getNextVisibleSlide();
       },
       _selectedChanged: function(selected, oldSelected) {
           if (oldSelected) oldSelected.removeAttribute('selected');
@@ -181,7 +201,7 @@ Simple carousel component for Polymer 1.0
        */
       _setKeyboardClass: function(event) {
         var host = Polymer.dom(this);
-        if (event.type === 'keyup' || event.type === 'keydown' || event.type === 'keypress') {
+        if (event && (event.type === 'keyup' || event.type === 'keydown' || event.type === 'keypress')) {
           host.classList.remove('non-keyboard');
         } else {
           host.classList.add('non-keyboard');
@@ -208,13 +228,7 @@ Simple carousel component for Polymer 1.0
         var elem = isSlideElem ? this.selected.previousElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
-          var n = 1;
-          elem = elems[elems.length - n];
-          while (elem.hidden) {
-            n++;
-            elem = elems[elems.length - n];
-          }
+          elem = this._getPreviousVisibleSlide();
         }
 
         elem && this._translateAnimation(elem,-1);
@@ -230,7 +244,7 @@ Simple carousel component for Polymer 1.0
         var elem = isSlideElem ? this.selected.nextElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          elem = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+          elem = this._getNextVisibleSlide();
         }
 
         elem && this._translateAnimation(elem,1);
