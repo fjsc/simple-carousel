@@ -1,5 +1,4 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../../src/shared-styles/shared-styles.html" />
 <link rel="import" href="carousel-slide.html">
 <link rel="import" href="animation-behavior.html">
 
@@ -13,7 +12,7 @@ Simple carousel component for Polymer 1.0
 
 <dom-module id="simple-carousel">
   <template>
-    <style include="shared-styles">
+    <style>
 
       :host {
         display: block;
@@ -164,9 +163,28 @@ Simple carousel component for Polymer 1.0
           this.intervalHander = setInterval(function(){that.next()}, this.transitionTime);
         }
       },
+      _getNextVisibleSlide() {
+        var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+        var selected;
+        elems.forEach(function(elem) {
+          if (!elem.hidden && !selected) {
+            selected = elem;
+          }
+        });
+        return selected;
+      },
+      _getPreviousVisibleSlide() {
+        var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+        var n = 1;
+        elem = elems[elems.length - n];
+        while (elem.hidden) {
+          n++;
+          elem = elems[elems.length - n];
+        }
+        return elem;
+      },
       attached: function() {
-        this.selected = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
-        //this.queryEffectiveChildren('carousel-slide').setAttribute('selected', '');
+        this.selected = this._getNextVisibleSlide();
       },
       _selectedChanged: function(selected, oldSelected) {
           if (oldSelected) oldSelected.removeAttribute('selected');
@@ -178,39 +196,39 @@ Simple carousel component for Polymer 1.0
           }
 
       },
-      keyboardAdvancePrevious: function ( event ) {
-        if ( ( event.which === 32 ) || ( event.which === 13 ) ) {
-          this.previous( event );
+      /**
+       * Sets keyboard class based on event type
+       */
+      _setKeyboardClass: function(event) {
+        var host = Polymer.dom(this);
+        if (event && (event.type === 'keyup' || event.type === 'keydown' || event.type === 'keypress')) {
+          host.classList.remove('non-keyboard');
+        } else {
+          host.classList.add('non-keyboard');
         }
       },
-      keyboardAdvanceNext: function ( event ) {
-        if ( ( event.which === 32 ) || ( event.which === 13 ) ) {          
-          this.next( event );
+      keyboardAdvancePrevious: function (event) {
+        if (event.which === 32 || event.which === 13) {
+          this.previous(event);
+        }
+      },
+      keyboardAdvanceNext: function (event) {
+        if (event.which === 32 || event.which === 13) {
+          this.next(event);
         }
       },
 
       /**
        * Shows the previous carousel element.
        */
-      previous: function( event ){
-        var host = Polymer.dom( this );
-        console.log( 'host', host );
-
-        if (
-          ( event.type === 'keyup' )
-          || ( event.type === 'keydown' )
-          || ( event.type === 'keypress' )
-        ) {
-          host.classList.remove( 'non-keyboard' );
-        } else {
-          host.classList.add( 'non-keyboard' );
-        }
-
-        var elem = this.selected.previousElementSibling;
+      previous: function(event) {
+        this._setKeyboardClass(event);
+        var prevElem = this.selected.previousElementSibling;
+        var isSlideElem = prevElem && prevElem.tagName === 'CAROUSEL-SLIDE' && !prevElem.hidden;
+        var elem = isSlideElem ? this.selected.previousElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
-          elem = elems[elems.length - 1];
+          elem = this._getPreviousVisibleSlide();
         }
 
         elem && this._translateAnimation(elem,-1);
@@ -219,24 +237,14 @@ Simple carousel component for Polymer 1.0
       /**
        * Shows the next carousel element.
        */
-      next:function( event ){
-        var host = Polymer.dom( this );
-        console.log( 'host', host );
-
-        if (
-          ( event.type === 'keyup' )
-          || ( event.type === 'keydown' )
-          || ( event.type === 'keypress' )
-        ) {
-          host.classList.remove( 'non-keyboard' );
-        } else {
-          host.classList.add( 'non-keyboard' );
-        }
-
-        var elem = this.selected.nextElementSibling;
+      next:function(event) {
+        this._setKeyboardClass(event);
+        var nextElem = this.selected.nextElementSibling;
+        var isSlideElem = nextElem && nextElem.tagName === 'CAROUSEL-SLIDE' && !nextElem.hidden;
+        var elem = isSlideElem ? this.selected.nextElementSibling : null;
         this._autoStart();
         if(this.infiniteLoop && !elem){
-          elem = this.queryEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
+          elem = this._getNextVisibleSlide();
         }
 
         elem && this._translateAnimation(elem,1);
