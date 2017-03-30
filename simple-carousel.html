@@ -96,7 +96,9 @@ Simple carousel component for Polymer 1.0
     Polymer({
 
       is: 'simple-carousel',
-      behaviors: [AnimationBehavior],
+      behaviors: [
+        Polymer.AnimationBehavior
+      ],
       properties: {
          /**
          * Set the selected item.
@@ -149,21 +151,21 @@ Simple carousel component for Polymer 1.0
           value: "ease"
         }
       },
-      ready: function(){
+      ready: function() {
         this._autoStart();
         if(this.showControls == 'false'){
           this.$.prevBtn.style.display = 'none';
           this.$.nextBtn.style.display = 'none';
         }
       },
-      _autoStart: function(){
+      _autoStart: function() {
         if(this.auto){
           var that =  this;
           this.intervalHander && clearInterval(this.intervalHander);
           this.intervalHander = setInterval(function(){that.next()}, this.transitionTime);
         }
       },
-      _getNextVisibleSlide() {
+      _getNextVisibleSlide: function() {
         var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
         var selected;
         elems.forEach(function(elem) {
@@ -173,7 +175,7 @@ Simple carousel component for Polymer 1.0
         });
         return selected;
       },
-      _getPreviousVisibleSlide() {
+      _getPreviousVisibleSlide: function() {
         var elems = this.queryAllEffectiveChildren('carousel-slide, [carousel-slide], [data-carousel-slide]');
         var n = 1;
         elem = elems[elems.length - n];
@@ -187,14 +189,13 @@ Simple carousel component for Polymer 1.0
         this.selected = this._getNextVisibleSlide();
       },
       _selectedChanged: function(selected, oldSelected) {
-          if (oldSelected) oldSelected.removeAttribute('selected');
-          if (selected) selected.setAttribute('selected', '');
+        if (oldSelected) oldSelected.removeAttribute('selected');
+        if (selected) selected.setAttribute('selected', '');
 
-          if(!this.infiniteLoop) {
-             this.$.prevBtn.disabled = !selected.previousElementSibling;
-             this.$.nextBtn.disabled = !selected.nextElementSibling;
-          }
-
+        if (!this.infiniteLoop) {
+           this.$.prevBtn.disabled = !selected.previousElementSibling;
+           this.$.nextBtn.disabled = !selected.nextElementSibling;
+        }
       },
       /**
        * Sets keyboard class based on event type
@@ -207,17 +208,16 @@ Simple carousel component for Polymer 1.0
           host.classList.add('non-keyboard');
         }
       },
-      keyboardAdvancePrevious: function (event) {
+      keyboardAdvancePrevious: function(event) {
         if (event.which === 32 || event.which === 13) {
           this.previous(event);
         }
       },
-      keyboardAdvanceNext: function (event) {
+      keyboardAdvanceNext: function(event) {
         if (event.which === 32 || event.which === 13) {
           this.next(event);
         }
       },
-
       /**
        * Shows the previous carousel element.
        */
@@ -227,38 +227,35 @@ Simple carousel component for Polymer 1.0
         var isSlideElem = prevElem && prevElem.tagName === 'CAROUSEL-SLIDE' && !prevElem.hidden;
         var elem = isSlideElem ? this.selected.previousElementSibling : null;
         this._autoStart();
-        if(this.infiniteLoop && !elem){
+        if (this.infiniteLoop && !elem) {
           elem = this._getPreviousVisibleSlide();
         }
-
-        elem && this._translateAnimation(elem,-1);
-
+        elem && this._translateAnimation(elem, -1);
       },
       /**
        * Shows the next carousel element.
        */
-      next:function(event) {
+      next: function(event) {
         this._setKeyboardClass(event);
         var nextElem = this.selected.nextElementSibling;
         var isSlideElem = nextElem && nextElem.tagName === 'CAROUSEL-SLIDE' && !nextElem.hidden;
         var elem = isSlideElem ? this.selected.nextElementSibling : null;
         this._autoStart();
-        if(this.infiniteLoop && !elem){
+        if (this.infiniteLoop && !elem) {
           elem = this._getNextVisibleSlide();
         }
-
-        elem && this._translateAnimation(elem,1);
+        elem && this._translateAnimation(elem, 1);
       },
       /**
        * Stop carousel loop
        */
-      stop: function(){
+      stop: function() {
         clearInterval(this.intervalHander);
       },
       /**
        * Start carousel loop
        */
-      start: function(){
+      start: function() {
         this.infiniteLoop = true;
         this._autoStart();
       }
