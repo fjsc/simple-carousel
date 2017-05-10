@@ -237,14 +237,17 @@ Simple carousel component for Polymer 1.0
        */
       next: function(event) {
         this._setKeyboardClass(event);
-        var nextElem = this.selected.nextElementSibling;
+        if(!this.selected){
+          this.selected = this._getNextVisibleSlide(); 
+        }
+        var nextElem = this.selected ? this.selected.nextElementSibling : null;
         var isSlideElem = nextElem && nextElem.tagName === 'CAROUSEL-SLIDE' && !nextElem.hidden;
         var elem = isSlideElem ? this.selected.nextElementSibling : null;
         this._autoStart();
         if (this.infiniteLoop && !elem) {
           elem = this._getNextVisibleSlide();
         }
-        elem && this._translateAnimation(elem, 1);
+        elem && this.selected && this._translateAnimation(elem,1);
       },
       /**
        * Stop carousel loop
