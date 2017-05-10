@@ -38,7 +38,7 @@ You can also use attributes (with or without the `data-` prefix):
 ## Demo
 
 
-> [Demo 1](https://franjsc.github.io/simple-carousel/components/simple-carousel/)
+> [Demo 1](https://fjsc.github.io/simple-carousel/components/simple-carousel/)
 
 <img src="http://www.bugui.org/Images/carousel.png" width="340"/>
 
